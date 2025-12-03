@@ -6,3 +6,5 @@ export { default as CancelRideModal } from "./CancelRideModal";
 export { default as DriverProfileModal } from "./DriverProfileModal";
 export { default as ReportPassengerModal } from "./ReportPassengerModal";
 export { default as TripHistoryModal } from "./TripHistoryModal";
+export { PassengerCard } from "./PassengerCard";
+export { NotificationCard } from "./NotificationCard";

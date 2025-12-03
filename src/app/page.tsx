@@ -10,8 +10,17 @@ import {
   ReportPassengerModal,
   TripHistoryModal,
 } from "@/components";
+import { mockDriver, mockRoute } from "../mockData/driverMock";
 
-type ModalType = "settings" | "notifications" | "driver" | "cancel" | "profile" | "report" | "trip-history" | null;
+type ModalType =
+  | "settings"
+  | "notifications"
+  | "driver"
+  | "cancel"
+  | "profile"
+  | "report"
+  | "trip-history"
+  | null;
 
 export default function Home() {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
@@ -173,9 +182,7 @@ export default function Home() {
                 <h3 className="font-semibold text-foreground">
                   Driver Profile
                 </h3>
-                <p className="text-sm text-foreground/60 mt-1">
-                  Profile page
-                </p>
+                <p className="text-sm text-foreground/60 mt-1">Profile page</p>
               </div>
             </button>
 
@@ -267,12 +274,21 @@ export default function Home() {
       <DriverProfileModal
         isOpen={activeModal === "profile"}
         onClose={closeModal}
+        driver={mockDriver}
+        route={mockRoute}
+        onTripHistoryClick={() => openModal("trip-history")}
+        onAccountSettingsClick={() => openModal("settings")}
       />
       <ReportPassengerModal
         isOpen={activeModal === "report"}
         onClose={closeModal}
         onSubmit={(category, comment) => {
-          console.log("Report submitted. Category:", category, "Comment:", comment);
+          console.log(
+            "Report submitted. Category:",
+            category,
+            "Comment:",
+            comment
+          );
         }}
       />
       <TripHistoryModal

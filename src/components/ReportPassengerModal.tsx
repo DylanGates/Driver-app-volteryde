@@ -1,17 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 interface ReportPassengerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit?: (category: string, comment: string) => void;
+  passengerName?: string;
+  pickupLocation?: string;
+  dropoffLocation?: string;
 }
 
 export default function ReportPassengerModal({
   isOpen,
   onClose,
   onSubmit,
+  passengerName = "Yaw Mensah",
+  pickupLocation = "Kwame Nkrumah Circle",
+  dropoffLocation = "Legon Campus",
 }: ReportPassengerModalProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [showComment, setShowComment] = useState(false);
@@ -65,12 +72,12 @@ export default function ReportPassengerModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+        className="absolute inset-0 bg-[#000000]/80 animate-in fade-in duration-200"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-2xl mx-4 bg-white rounded-2xl shadow-2xl animate-in zoom-in-95 fade-in duration-200 overflow-hidden">
+      <div className="relative w-full max-w-2xl mx-4 bg-white rounded-3xl shadow-2xl animate-in zoom-in-95 fade-in duration-200 overflow-hidden">
         {/* Red Header */}
         <div className="bg-red-500 px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -110,17 +117,23 @@ export default function ReportPassengerModal({
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-12">
           {/* Passenger Info Card */}
-          <div className="flex items-center gap-4 bg-gray-100 rounded-xl p-4">
-            <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold text-lg">
-              YM
+          <div className="flex items-center gap-4 bg-[#F5F5F5] rounded-xl p-4 pb-6">
+            <div className="w-12 h-12 rounded-full bg-[#CCCCCC] text-[#737373] flex items-center justify-center font-semibold text-lg">
+              {passengerName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()}
             </div>
             <div>
-              <h3 className="font-semibold text-lg text-gray-900">Yaw Mensah</h3>
+              <h3 className="font-semibold text-lg text-brand-primary mb-1">
+                {passengerName}
+              </h3>
               <div className="flex items-center gap-1 text-gray-600 text-sm">
                 <svg
-                  className="w-4 h-4"
+                  className="w-4 h-4 text-brand-primary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -138,7 +151,9 @@ export default function ReportPassengerModal({
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                 </svg>
-                <span>Kwame Nkrumah Circle → Legon Campus</span>
+                <span>
+                  {pickupLocation} → {dropoffLocation}
+                </span>
               </div>
             </div>
           </div>
@@ -155,17 +170,17 @@ export default function ReportPassengerModal({
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`flex items-start gap-3 p-4 rounded-xl border-2 transition-all text-left ${
+                  className={`flex items-start gap-3 p-4 rounded-xl transition-all text-left ${
                     selectedCategory === category.id
-                      ? "border-red-500 bg-red-50"
-                      : "border-gray-200 hover:border-red-300 hover:bg-gray-50"
+                      ? "border border-brand-primary bg-brand-primary/5"
+                      : "bg-white"
                   }`}
                 >
                   <svg
-                    className={`w-6 h-6 mt-0.5 flex-shrink-0 ${
+                    className={`w-6 h-6 mt-0.5 hrink-0 ${
                       selectedCategory === category.id
                         ? "text-red-500"
-                        : "text-gray-400"
+                        : "text-[#F5F5F5]"
                     }`}
                     fill="none"
                     viewBox="0 0 24 24"
@@ -179,7 +194,7 @@ export default function ReportPassengerModal({
                     />
                   </svg>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">
+                    <h4 className="font-semibold text-brand-primary mb-1">
                       {category.title}
                     </h4>
                     <p className="text-sm text-gray-600">
@@ -195,21 +210,9 @@ export default function ReportPassengerModal({
           {!showComment ? (
             <button
               onClick={() => setShowComment(true)}
-              className="w-full py-3 px-6 rounded-full border-2 border-gray-900 text-gray-900 font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 px-6 rounded-full border border-brand-primary text-gray-900 font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                />
-              </svg>
+              <Image src="/pen.png" alt="Pen Icon" width={20} height={20} />
               Leave a Comment
             </button>
           ) : (
@@ -222,43 +225,40 @@ export default function ReportPassengerModal({
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Provide additional details about the incident..."
                 rows={4}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-red-500 resize-none"
+                className="w-full px-6 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 resize-none"
               />
             </div>
           )}
 
           {/* Action Buttons */}
-          <div className="flex gap-4 pt-2">
-            <button
-              onClick={handleCancel}
-              className="flex-1 py-3 px-6 rounded-full border-2 border-gray-300 text-gray-900 font-medium hover:bg-gray-50 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={!selectedCategory}
-              className={`flex-1 py-3 px-6 rounded-full font-medium transition-colors flex items-center justify-center gap-2 ${
-                selectedCategory
-                  ? "bg-red-500 text-white hover:bg-red-600"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+          <div className="flex gap-4 pt-12 justify-end">
+            <div>
+              <button
+                onClick={handleCancel}
+                className="flex-1 py-3 px-16 rounded-full border-2 border-gray-300 text-gray-900 font-medium hover:bg-gray-50 transition-colors"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                Cancel
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={handleSubmit}
+                disabled={!selectedCategory}
+                className={`flex-1 py-3 px-6 rounded-full font-medium transition-colors flex items-center justify-center gap-2 ${
+                  selectedCategory
+                    ? "bg-red-500 text-white hover:bg-red-600"
+                    : "bg-gray-300 text-white cursor-not-allowed"
+                }`}
+              >
+                <Image
+                  src="/upload.png"
+                  alt="Upload Icon"
+                  width={20}
+                  height={20}
                 />
-              </svg>
-              Submit Report
-            </button>
+                Submit Report
+              </button>
+            </div>
           </div>
         </div>
       </div>
